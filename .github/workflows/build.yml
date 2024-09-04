@@ -61,7 +61,7 @@ jobs:
     #   matrix:
     #     os: [anoncreds-windows-latest, anoncreds-ubuntu-latest]
 
-    runs-on: anoncreds-ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
