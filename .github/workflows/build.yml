@@ -82,13 +82,27 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: HTML coverage output
+        if: ${{ runner.os != 'Windows' }}
+        run: cargo llvm-cov report --html
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: lcov.info
-          fail_ci_if_error: true
+          # Upload entire repository
+          path: 'target/llvm-cov/html'
           
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      
+      - name: Check minimum coverage is respected
+        if: ${{ runner.os != 'Windows' }}
+        run: cargo llvm-cov report --fail-under-lines $${{
+        
       - name: Test Windows
         if: ${{ runner.os == 'Windows' }}
         env:
