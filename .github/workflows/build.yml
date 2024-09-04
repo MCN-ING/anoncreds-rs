@@ -107,7 +107,7 @@ jobs:
       
       - name: Check minimum coverage is respected
         if: ${{ runner.os != 'Windows' }}
-        run: cargo llvm-cov report --fail-under-lines ${{ env.LLVM_COV_FAIL_UNDER_LINES }}
+        run: cargo llvm-cov report --fail-under-lines ${{ vars.LLVM_COV_FAIL_UNDER_LINES }}
         
       - name: Test Windows
         if: ${{ runner.os == 'Windows' }}
