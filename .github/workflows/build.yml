@@ -1,5 +1,11 @@
 name: "Anoncreds"
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  
 env:
   RUST_VERSION: "stable 6 months ago"
   CROSS_VERSION: "0.2.4"
