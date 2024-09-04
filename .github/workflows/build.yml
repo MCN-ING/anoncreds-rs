@@ -77,7 +77,14 @@ jobs:
 
       - name: Test Linux and macOS
         if: ${{ runner.os != 'Windows' }}
-        run: cargo test --package anoncreds --features vendored
+        run: RUSTFLAGS="-C instrument-coverage" cargo test --package anoncreds --features vendored
+
+      - name: output coverage information
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install rustfilt llvm
+          llvm-profdata merge -sparse default_*.profraw -o json5format.profdata
+          llvm-cov report --use-color --ignore-filename-regex='/.cargo/registry' --instr-profile=json5format.profdata --object $(find . -regextype sed -regex ".*/debug/deps/anoncreds-[0-9a-f]*")
 
       - name: Test Windows
         if: ${{ runner.os == 'Windows' }}
