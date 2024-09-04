@@ -74,18 +74,20 @@ jobs:
 
       - name: Cache cargo resources
         uses: Swatinem/rust-cache@v2
-
+        
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+        
       - name: Test Linux and macOS
         if: ${{ runner.os != 'Windows' }}
-        run: RUSTFLAGS="-C instrument-coverage" cargo test --package anoncreds --features vendored
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 
-      - name: output coverage information
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install rustfilt llvm
-          llvm-profdata merge -sparse default_*.profraw -o json5format.profdata
-          llvm-cov report --use-color --ignore-filename-regex='/.cargo/registry' --instr-profile=json5format.profdata --object $(find . -regextype sed -regex ".*/debug/deps/anoncreds-[0-9a-f]*")
-
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: lcov.info
+          fail_ci_if_error: true
+          
       - name: Test Windows
         if: ${{ runner.os == 'Windows' }}
         env:
