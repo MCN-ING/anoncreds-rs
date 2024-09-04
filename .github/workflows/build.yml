@@ -60,6 +60,9 @@ jobs:
     strategy:
       matrix:
         os: [anoncreds-windows-latest, anoncreds-ubuntu-latest]
+      exclude:
+        os: [anoncreds-windows-latest]
+        architecture: linux-aarch64
 
     runs-on: ${{ matrix.os }}
 
